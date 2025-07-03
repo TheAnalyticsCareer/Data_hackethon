@@ -1,3 +1,51 @@
+// FeaturedChallenges section component
+import { useData } from '../contexts/DataContext';
+
+const FeaturedChallenges: React.FC = () => {
+  const { challenges } = useData();
+  // Show only first 4 active challenges
+  const featured = challenges.filter(c => c.status === 'active').slice(0, 4);
+  const navigate = useNavigate();
+
+  return (
+    <div>
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {featured.map((challenge) => (
+          <div key={challenge.id} className="bg-white dark:bg-slate-800 rounded-xl shadow p-6 flex flex-col justify-between border border-slate-100 dark:border-slate-700">
+            <div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{challenge.title}</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-300 mb-3 line-clamp-3">{challenge.description}</p>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {challenge.tags.map(tag => (
+                  <span key={tag} className="px-2 py-0.5 text-xs rounded bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">{tag}</span>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center justify-between mt-4">
+              <span className="text-xs font-semibold px-2 py-1 rounded bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                {challenge.difficulty.charAt(0).toUpperCase() + challenge.difficulty.slice(1)}
+              </span>
+              <button
+                className="text-blue-600 dark:text-blue-400 font-semibold hover:underline text-sm"
+                onClick={() => navigate(`/challenge/${challenge.id}`)}
+              >
+                View Challenge
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-center">
+        <button
+          className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+          onClick={() => navigate('/all-challenges')}
+        >
+          View All Challenges
+        </button>
+      </div>
+    </div>
+  );
+};
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -65,6 +113,7 @@ const Landing: React.FC = () => {
     { value: '95%', label: 'Satisfaction' }
   ];
 
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -79,7 +128,7 @@ const Landing: React.FC = () => {
           >
             <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white mb-6">
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                DataSprint
+                HACKETHON <span className="text-2xl font-normal text-slate-600 dark:text-slate-300 ml-2"></span>
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto">
@@ -150,6 +199,23 @@ const Landing: React.FC = () => {
               </div>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Featured Challenges Section */}
+      <section className="py-12 px-4 bg-gradient-to-br from-blue-50/60 to-purple-50/60 dark:from-slate-800/60 dark:to-slate-900/60">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-10"
+          >
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Join thousands of data scientists in our Professional Data Analysis Hackathon Platform</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Start your journey by solving real-world challenges and climb the leaderboard!</p>
+          </motion.div>
+          <FeaturedChallenges />
         </div>
       </section>
 

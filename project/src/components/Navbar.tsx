@@ -1,17 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { 
-  BarChart3, 
-  Trophy, 
-  Settings, 
-  User, 
-  LogOut, 
-  Moon, 
-  Sun,
-  Menu,
-  X,
-  Target,
-  Users
+import {
+  BarChart3, Trophy, Settings, User, LogOut,
+  Moon, Sun, Menu, X, Target, Users
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -32,6 +23,11 @@ const Navbar: React.FC = () => {
     setShowUserMenu(false);
   };
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setShowMobileMenu(false);
+  }, [location.pathname]);
+
   const navLinks = [
     { path: '/all-challenges', label: 'All Challenges', icon: BarChart3 },
     { path: '/my-challenges', label: 'My Challenges', icon: Target },
@@ -42,78 +38,89 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-700">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-700 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-white" />
+            <Link to="/" className="flex items-center gap-2">
+              <img
+                src="https://d502jbuhuh9wk.cloudfront.net/logos/6677da88a7c70751b1bf34a8.png?v=1"
+                alt="Hackethon Logo"
+                className="w-8 h-8 rounded-md object-cover"
+              />
+              <div className="flex flex-col leading-tight">
+                <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  HACKETHON
+                </span>
+                <span className="text-[10px] sm:text-xs font-normal text-slate-600 dark:text-slate-300">
+                  powered by Analytics Career
+                </span>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                DataSprint
-              </span>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center gap-6">
               {user && navLinks.map(({ path, label, icon: Icon }) => (
                 <Link
                   key={path}
                   to={path}
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-colors ${
+                  className={`flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium transition-all ${
                     location.pathname === path
                       ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
                       : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  <span>{label}</span>
+                  {label}
                 </Link>
               ))}
             </div>
 
-            {/* Right Side */}
-            <div className="flex items-center space-x-4">
+            {/* Right Section */}
+            <div className="flex items-center gap-3">
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className="p-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition"
               >
-                {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                {isDark ? (
+                  <Sun className="w-5 h-5 text-yellow-400" />
+                ) : (
+                  <Moon className="w-5 h-5 text-slate-600" />
+                )}
               </button>
 
-              {/* User Menu */}
+              {/* Auth/Profile */}
               {user ? (
                 <div className="relative">
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
-                    className="flex items-center space-x-2 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                   >
                     <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
                       <User className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden sm:block">
+                    <span className="hidden sm:block text-sm font-medium text-slate-700 dark:text-slate-300">
                       {user.name}
                     </span>
                   </button>
 
                   {showUserMenu && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2">
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-2 z-50">
                       <Link
                         to="/profile"
-                        className="flex items-center space-x-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                         onClick={() => setShowUserMenu(false)}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                       >
                         <User className="w-4 h-4" />
-                        <span>Profile</span>
+                        Profile
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="flex items-center space-x-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-700 w-full text-left"
+                        className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-700"
                       >
                         <LogOut className="w-4 h-4" />
-                        <span>Sign Out</span>
+                        Sign Out
                       </button>
                     </div>
                   )}
@@ -121,43 +128,44 @@ const Navbar: React.FC = () => {
               ) : (
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium"
                 >
                   Sign In
                 </button>
               )}
 
-              {/* Mobile Menu Button */}
+              {/* Mobile Menu Toggle */}
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="md:hidden p-2 text-slate-600 dark:text-slate-300"
+                className="md:hidden p-2 rounded hover:bg-slate-200 dark:hover:bg-slate-800 transition"
               >
-                {showMobileMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {showMobileMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
           </div>
+        </div>
 
-          {/* Mobile Menu */}
-          {showMobileMenu && user && (
-            <div className="md:hidden border-t border-slate-200 dark:border-slate-700 py-4">
+        {/* Mobile Nav */}
+        {showMobileMenu && user && (
+          <div className="md:hidden px-4 py-3 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+            <div className="flex flex-col space-y-2">
               {navLinks.map(({ path, label, icon: Icon }) => (
                 <Link
                   key={path}
                   to={path}
-                  className={`flex items-center space-x-2 px-4 py-3 text-sm transition-colors ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
                     location.pathname === path
                       ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                      : 'text-slate-600 dark:text-slate-300'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
-                  onClick={() => setShowMobileMenu(false)}
                 >
                   <Icon className="w-4 h-4" />
-                  <span>{label}</span>
+                  {label}
                 </Link>
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </nav>
 
       {/* Auth Modal */}
