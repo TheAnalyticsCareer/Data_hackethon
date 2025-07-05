@@ -10,8 +10,6 @@ interface CertificateProps {
 }
 
 const Certificate: React.FC<CertificateProps> = ({ studentName, challengeName, signatureUrl, date }) => {
-  // Format date as e.g. July 4, 2025
-  const formattedDate = date ? new Date(date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
   return (
     <div
       id="certificate"
@@ -24,7 +22,7 @@ const Certificate: React.FC<CertificateProps> = ({ studentName, challengeName, s
       <h2 className="text-3xl font-semibold text-blue-900 my-2">{studentName}</h2>
       <p className="text-lg text-gray-700">has successfully completed the challenge</p>
       <h3 className="text-2xl font-semibold text-blue-700 my-2">{challengeName}</h3>
-      <p className="text-base text-gray-600 mt-4 mb-8">Awarded on {formattedDate}</p>
+      <p className="text-base text-gray-600 mt-4 mb-8">Awarded on {date || new Date().toLocaleDateString()}</p>
 
       <div className="flex items-center justify-between w-full px-8 mt-8">
         <div className="flex flex-col items-center ">

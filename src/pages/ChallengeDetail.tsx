@@ -209,13 +209,13 @@ const ChallengeDetail: React.FC = () => {
             )}
 
             {completed && user && challenge && (
-              <div className="flex flex-col items-center my-8">
-                <Certificate
+              <div className="w-full flex justify-center my-8">
+                <CertificateDownloadButton 
+                  elementId="certificate"
+                  filename={`Certificate-${user.name}-${challenge.title}.pdf`} 
                   studentName={user.name}
                   challengeName={challenge.title}
-                  companyLogoUrl={"https://d502jbuhuh9wk.cloudfront.net/logos/6677da88a7c70751b1bf34a8.png?v=1"}
                 />
-                <CertificateDownloadButton elementId="certificate" filename={`Certificate-${user.name}-${challenge.title}.pdf`} />
               </div>
             )}
           </motion.div>
